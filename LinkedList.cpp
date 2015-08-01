@@ -12,6 +12,7 @@ private:
 
         public: Node(const T v): value(v), next(nullptr) {}
     };
+
     Node *head = nullptr;
     Node *last_elem = nullptr;
 
@@ -24,13 +25,8 @@ private:
 
 public:
     void add_node(const T value) {
-        if (!head) {
-            head = new Node(value);
-            last_elem = head;
-        } else {
-            last_elem->next = new Node(value);
-            last_elem = last_elem->next;
-        }
+        last_elem->next = new Node(value);
+        last_elem = last_elem->next;
     }
 
     friend ostream& operator<<(ostream& out, const LinkedList &l) {
@@ -65,7 +61,7 @@ public:
     // Do not mix insert_sorted and add_node!!
     void insert_sorted(const T value) {
         auto *tmp = head;
-        T temp, temp2;
+        T temp, temp2; // fix temp2 usage here...
 
         while (tmp && value > tmp->value) {
             tmp = tmp->next;
@@ -78,6 +74,7 @@ public:
             while (tmp != last_elem) {
                 temp2 = tmp->value;
                 tmp->value = temp;
+                temp = temp2;
                 tmp = tmp->next;
             }
         } else {
@@ -96,6 +93,23 @@ public:
         return i;
     }
 
+    LinkedList(const T value) {
+        head = new Node(value);
+        last_elem = head;
+    }
+
+    LinkedList(const LinkedList<T> &l) {
+        auto *tmp = l.head;
+
+        cout << "Copy constructor." << endl;
+        head = new Node(tmp->value);
+        last_elem = head;
+        while (tmp->next) {
+            add_node(tmp->next->value);
+            tmp = tmp->next;
+        }
+    }
+
     ~LinkedList() {
         cout << "freeing nodes" << endl;
         free_node(head);
@@ -103,26 +117,25 @@ public:
 };
 
 int main() {
-    LinkedList<int> myList, sortedList;
-    LinkedList<string> charList, charSortedList;
+    LinkedList<int> myList(5), sortedList(10);
+    LinkedList<string> charList("hello"), charSortedList("c");
 
-    myList.add_node(5);
     myList.add_node(2);
     myList.add_node(64);
     cout << myList;
     myList.sort();
     cout << myList;
 
-    sortedList.insert_sorted(10);
+    LinkedList<int> copiedList(myList);
+    cout << copiedList;
+
     sortedList.insert_sorted(5);
     sortedList.insert_sorted(1);
     cout << sortedList;
 
-    charList.add_node("hello");
     charList.add_node("world");
     cout << charList;
 
-    charSortedList.insert_sorted("c");
     charSortedList.insert_sorted("a");
     charSortedList.insert_sorted("b");
     cout << charSortedList;
