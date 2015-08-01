@@ -15,6 +15,13 @@ private:
     Node *head = nullptr;
     Node *last_elem = nullptr;
 
+    void free_node(Node *t) {
+        if (t->next) {
+            free_node(t->next);
+        }
+        delete t;
+    }
+
 public:
     void add_node(const T value) {
         if (!head) {
@@ -26,8 +33,8 @@ public:
         }
     }
 
-    friend ostream& operator<<(ostream& out, const LinkedList myList) {
-        Node *tmp = myList.head;
+    friend ostream& operator<<(ostream& out, const LinkedList &l) {
+        Node *tmp = l.head;
 
         while (tmp) {
             out << tmp->value << endl;
@@ -87,6 +94,11 @@ public:
             tmp = tmp->next;
         }
         return i;
+    }
+
+    ~LinkedList() {
+        cout << "freeing nodes" << endl;
+        free_node(head);
     }
 };
 
