@@ -43,7 +43,7 @@ public:
         return out;
     }
 
-    void sort_list() {
+    void sort() {
         Node *tmp = head, *temp, *sw;
         T min;
 
@@ -110,7 +110,7 @@ int main() {
     myList.add_node(2);
     myList.add_node(64);
     cout << myList;
-    myList.sort_list();
+    myList.sort();
     cout << myList;
 
     sortedList.insert_sorted(10);
