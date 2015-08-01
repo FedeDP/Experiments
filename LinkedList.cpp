@@ -83,8 +83,7 @@ public:
     }
 
     int size() {
-        auto i = 0;
-        auto *tmp = head;
+        auto i = 0, *tmp = head;
 
         while (tmp) {
             i++;
