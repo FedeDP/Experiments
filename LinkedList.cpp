@@ -10,24 +10,30 @@ private:
         T value;
         Node *next;
 
-        public: Node(const T v): value(v), next(nullptr) {}
+        public:
+            Node(const T v): value(v), next(nullptr) {
+
+            }
     };
+
     Node *head = nullptr;
-    Node *last_elem = nullptr;
+    Node *last = nullptr;
 
 public:
-    void add_node(const T value) {
+    // Da definire, ctor, copy-ctor, copy assignment
+
+    void push_back(const T value) {
         if (!head) {
             head = new Node(value);
-            last_elem = head;
+            last = head;
         } else {
-            last_elem->next = new Node(value);
-            last_elem = last_elem->next;
+            last->next = new Node(value);
+            last = last->next;
         }
     }
 
-    friend ostream& operator<<(ostream& out, const LinkedList myList) {
-        Node *tmp = myList.head;
+    friend ostream& operator<<(ostream& out, const LinkedList& l) {
+        Node *tmp = l.head;
 
         while (tmp) {
             out << tmp->value << endl;
@@ -36,7 +42,7 @@ public:
         return out;
     }
 
-    void sort_list() {
+    void sort() {
         Node *tmp = head, *temp, *sw;
         T min;
 
@@ -55,7 +61,7 @@ public:
         }
     }
 
-    // Do not mix insert_sorted and add_node!!
+    // Do not mix insert_sorted and push_back!!
     void insert_sorted(const T value) {
         Node *tmp = head;
         T temp, temp2;
@@ -64,17 +70,18 @@ public:
             tmp = tmp->next;
         }
         if (tmp) {
-            add_node(last_elem->value);
+            push_back(last->value);
             temp = tmp->value;
             tmp->value = value;
             tmp = tmp->next;
-            while (tmp != last_elem) {
+
+            while (tmp != last) {
                 temp2 = tmp->value;
                 tmp->value = temp;
                 tmp = tmp->next;
             }
         } else {
-            add_node(value);
+            push_back(value);
         }
     }
 
@@ -88,17 +95,22 @@ public:
         }
         return i;
     }
+
+    ~LinkedList() {
+        // Itera nodi e chiama delete su ognuno
+    }
+
 };
 
 int main() {
     LinkedList<int> myList, sortedList;
     LinkedList<string> charList, charSortedList;
 
-    myList.add_node(5);
-    myList.add_node(2);
-    myList.add_node(64);
+    myList.push_back(5);
+    myList.push_back(2);
+    myList.push_back(64);
     cout << myList;
-    myList.sort_list();
+    myList.sort()();
     cout << myList;
 
     sortedList.insert_sorted(10);
@@ -106,8 +118,8 @@ int main() {
     sortedList.insert_sorted(1);
     cout << sortedList;
 
-    charList.add_node("hello");
-    charList.add_node("world");
+    charList.push_back("hello");
+    charList.push_back("world");
     cout << charList;
 
     charSortedList.insert_sorted("c");
