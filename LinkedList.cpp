@@ -114,29 +114,44 @@ public:
         cout << "freeing nodes" << endl;
         free_node(head);
     }
+
+    void operator=(const LinkedList &l) {
+        cout << "Assigning..." << endl;
+        head = l.head;
+        last_elem = l.last_elem;
+    }
 };
 
 int main() {
-    LinkedList<int> myList(5), sortedList(10);
-    LinkedList<string> charList("hello"), charSortedList("c");
+    LinkedList<int> myList(5);
 
     myList.add_node(2);
     myList.add_node(64);
-    cout << myList;
     myList.sort();
-    cout << myList;
+    cout << myList << endl;
 
+    cout << "check copy constructor" << endl;
     LinkedList<int> copiedList(myList);
-    cout << copiedList;
+    cout << copiedList << endl;
 
+    cout << "adding 5 to first list, and assigning first list to second one" << endl;
+    myList.add_node(5);
+    copiedList = myList;
+    cout << copiedList << endl;
+
+    cout << "check insert_sorted" << endl;
+    LinkedList<int> sortedList(10);
     sortedList.insert_sorted(5);
     sortedList.insert_sorted(1);
-    cout << sortedList;
+    cout << sortedList << endl;
 
+    cout << "check template" << endl;
+    LinkedList<string> charList("hello");
     charList.add_node("world");
-    cout << charList;
+    cout << charList << endl;
 
+    LinkedList<string> charSortedList("c");
     charSortedList.insert_sorted("a");
     charSortedList.insert_sorted("b");
-    cout << charSortedList;
+    cout << charSortedList << endl;
 }
