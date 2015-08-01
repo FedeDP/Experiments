@@ -10,7 +10,7 @@ private:
         T value;
         Node *next;
 
-        public: Node(const T v): value(v), next(nullptr) {}
+        Node(const T v): value(v), next(nullptr) {}
     };
 
     Node *head = nullptr;
@@ -24,9 +24,34 @@ private:
     }
 
 public:
-    void add_node(const T value) {
-        last_elem->next = new Node(value);
-        last_elem = last_elem->next;
+    LinkedList(const T value) {
+        head = new Node(value);
+        last_elem = head;
+    }
+
+    LinkedList(const LinkedList<T> &l) {
+        auto *tmp = l.head;
+
+        cout << "Copy constructor." << endl;
+        head = new Node(tmp->value);
+        last_elem = head;
+        while (tmp->next) {
+            add_node(tmp->next->value);
+            tmp = tmp->next;
+        }
+    }
+
+    ~LinkedList() {
+        cout << "freeing nodes" << endl;
+        free_node(head);
+    }
+
+    LinkedList& operator=(const LinkedList &l) {
+        cout << "Assigning..." << endl;
+        free_node(head);
+        head = l.head;
+        last_elem = l.last_elem;
+        return *this;
     }
 
     friend ostream& operator<<(ostream& out, const LinkedList &l) {
@@ -37,6 +62,11 @@ public:
             tmp = tmp->next;
         }
         return out;
+    }
+
+    void add_node(const T value) {
+        last_elem->next = new Node(value);
+        last_elem = last_elem->next;
     }
 
     void sort() {
@@ -90,34 +120,6 @@ public:
             tmp = tmp->next;
         }
         return i;
-    }
-
-    LinkedList(const T value) {
-        head = new Node(value);
-        last_elem = head;
-    }
-
-    LinkedList(const LinkedList<T> &l) {
-        auto *tmp = l.head;
-
-        cout << "Copy constructor." << endl;
-        head = new Node(tmp->value);
-        last_elem = head;
-        while (tmp->next) {
-            add_node(tmp->next->value);
-            tmp = tmp->next;
-        }
-    }
-
-    ~LinkedList() {
-        cout << "freeing nodes" << endl;
-        free_node(head);
-    }
-
-    void operator=(const LinkedList &l) {
-        cout << "Assigning..." << endl;
-        head = l.head;
-        last_elem = l.last_elem;
     }
 };
 
