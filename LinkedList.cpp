@@ -34,7 +34,7 @@ public:
     }
 
     friend ostream& operator<<(ostream& out, const LinkedList &l) {
-        Node *tmp = l.head;
+        auto *tmp = l.head;
 
         while (tmp) {
             out << tmp->value << endl;
@@ -64,7 +64,7 @@ public:
 
     // Do not mix insert_sorted and add_node!!
     void insert_sorted(const T value) {
-        Node *tmp = head;
+        auto *tmp = head;
         T temp, temp2;
 
         while (tmp && value > tmp->value) {
@@ -86,8 +86,8 @@ public:
     }
 
     int size() {
-        int i = 0;
-        Node *tmp = head;
+        auto i = 0;
+        auto *tmp = head;
 
         while (tmp) {
             i++;
