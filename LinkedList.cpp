@@ -14,7 +14,7 @@ private:
     };
 
     Node *head = nullptr;
-    Node *last_elem = nullptr;
+    Node *last = nullptr;
 
     void free_node(Node *t) {
         if (t->next) {
@@ -23,22 +23,26 @@ private:
         delete t;
     }
 
-public:
-    LinkedList(const T value) {
-        head = new Node(value);
-        last_elem = head;
-    }
+    void copy_nodes(const LinkedList &l) {
+        auto tmp = l.head;
 
-    LinkedList(const LinkedList<T> &l) {
-        auto *tmp = l.head;
-
-        cout << "Copy constructor." << endl;
         head = new Node(tmp->value);
-        last_elem = head;
+        last = head;
         while (tmp->next) {
             add_node(tmp->next->value);
             tmp = tmp->next;
         }
+    }
+
+public:
+    LinkedList(const T value) {
+        head = new Node(value);
+        last = head;
+    }
+
+    LinkedList(const LinkedList<T> &l) {
+        cout << "Copy constructor." << endl;
+        copy_nodes(l);
     }
 
     ~LinkedList() {
@@ -49,13 +53,12 @@ public:
     LinkedList& operator=(const LinkedList &l) {
         cout << "Assigning..." << endl;
         free_node(head);
-        head = l.head;
-        last_elem = l.last_elem;
+        copy_nodes(l);
         return *this;
     }
 
     friend ostream& operator<<(ostream& out, const LinkedList &l) {
-        auto *tmp = l.head;
+        auto tmp = l.head;
 
         while (tmp) {
             out << tmp->value << endl;
@@ -65,46 +68,46 @@ public:
     }
 
     void add_node(const T value) {
-        last_elem->next = new Node(value);
-        last_elem = last_elem->next;
+        last->next = new Node(value);
+        last = last->next;
     }
 
     void sort() {
-        Node *tmp = head, *temp, *sw;
+        Node *first = head, *second, *sw;
         T min;
 
-        while (tmp) {
-            min = tmp->value;
-            sw = tmp;
-            for (temp = tmp; temp; temp = temp->next) {
-                if (temp->value < min) {
-                    min = temp->value;
-                    sw = temp;
+        while (first) {
+            min = first->value;
+            sw = first;
+            for (second = first; second; second = second->next) {
+                if (second->value < min) {
+                    min = second->value;
+                    sw = second;
                 }
             }
-            sw->value = tmp->value;
-            tmp->value = min;
-            tmp = tmp->next;
+            sw->value = first->value;
+            first->value = min;
+            first = first->next;
         }
     }
 
     // Do not mix insert_sorted and add_node!!
     void insert_sorted(const T value) {
-        auto *tmp = head;
-        T temp, temp2; // fix temp2 usage here...
+        auto tmp = head;
+        T first, second;
 
         while (tmp && value > tmp->value) {
             tmp = tmp->next;
         }
         if (tmp) {
-            add_node(last_elem->value);
-            temp = tmp->value;
+            add_node(last->value);
+            first = tmp->value;
             tmp->value = value;
             tmp = tmp->next;
-            while (tmp != last_elem) {
-                temp2 = tmp->value;
-                tmp->value = temp;
-                temp = temp2;
+            while (tmp != last) {
+                second = tmp->value;
+                tmp->value = first;
+                first = second;
                 tmp = tmp->next;
             }
         } else {
@@ -113,7 +116,7 @@ public:
     }
 
     int size() {
-        auto i = 0, *tmp = head;
+        auto i = 0, tmp = head;
 
         while (tmp) {
             i++;
