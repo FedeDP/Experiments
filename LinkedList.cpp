@@ -11,7 +11,7 @@ private:
         T value;
         unique_ptr<Node> next;
 
-        Node(const T v): value(v), next(nullptr) {}
+        Node(const T v): value(v) {}
     };
 
     unique_ptr<Node> head;
@@ -19,7 +19,7 @@ private:
     void copy_nodes(const LinkedList &l) {
         auto tmp = l.head.get();
 
-        head = unique_ptr<Node>{new Node(tmp->value)};
+        head = unique_ptr<Node>(new Node(tmp->value));
         while (tmp->next) {
             add_node(tmp->next->value);
             tmp = tmp->next.get();
@@ -53,7 +53,7 @@ public:
     }
 
     void add_node(const T value) {
-        Node *tmp = head.get();
+        auto tmp = head.get();
 
         while (tmp->next) {
             tmp = tmp->next.get();
@@ -61,8 +61,30 @@ public:
         tmp->next = unique_ptr<Node>{new Node(value)};
     }
 
+    // getter and setter make no error checking (if index > nodelist.length() or < 1)
+    T get(int index) const {
+        auto tmp = head.get();
+
+        do {
+            index--;
+            tmp = tmp->next.get();
+        } while (index != 1);
+        return tmp->value;
+    }
+
+    void set(int index, T value) {
+        auto tmp = head.get();
+
+        do {
+            index--;
+            tmp = tmp->next.get();
+        } while (index != 1);
+        tmp->value = value;
+    }
+
     void sort() const {
-        Node *first = head.get(), *second, *sw;
+        Node *first = head.get();
+        Node *second, *sw;
         T min;
 
         while (first) {
@@ -110,7 +132,8 @@ public:
     }
 
     int size() const {
-        auto i = 0, tmp = head;
+        auto i = 0;
+        auto tmp = head;
 
         while (tmp) {
             i++;
@@ -152,4 +175,12 @@ int main() {
     charSortedList.insert_sorted("a");
     charSortedList.insert_sorted("b");
     cout << charSortedList << endl;
+
+    cout << "checking getter" << endl;
+    auto x = charSortedList.get(2);
+    cout << x << endl;
+    cout << "checking setter" << endl;
+    charSortedList.set(2, "L");
+    x = charSortedList.get(2);
+    cout << x << endl;
 }
