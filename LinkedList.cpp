@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
@@ -13,8 +14,7 @@ private:
         Node(const T v): value(v), next(nullptr) {}
     };
 
-    Node *head = nullptr;
-    Node *last = nullptr;
+    Node *head;
 
     void free_node(Node *t) {
         if (t->next) {
@@ -27,7 +27,6 @@ private:
         auto tmp = l.head;
 
         head = new Node(tmp->value);
-        last = head;
         while (tmp->next) {
             add_node(tmp->next->value);
             tmp = tmp->next;
@@ -37,7 +36,6 @@ private:
 public:
     LinkedList(const T value) {
         head = new Node(value);
-        last = head;
     }
 
     LinkedList(const LinkedList<T> &l) {
@@ -68,8 +66,12 @@ public:
     }
 
     void add_node(const T value) {
-        last->next = new Node(value);
-        last = last->next;
+        auto tmp = head;
+
+        while (tmp->next) {
+            tmp = tmp->next;
+        }
+        tmp->next = new Node(value);
     }
 
     void sort() {
@@ -100,11 +102,16 @@ public:
             tmp = tmp->next;
         }
         if (tmp) {
+            auto last = tmp;
+
+            while (last->next) {
+                last = last->next;
+            }
             add_node(last->value);
             first = tmp->value;
             tmp->value = value;
             tmp = tmp->next;
-            while (tmp != last) {
+            while (tmp) {
                 second = tmp->value;
                 tmp->value = first;
                 first = second;
