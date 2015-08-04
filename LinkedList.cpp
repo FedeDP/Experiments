@@ -61,14 +61,16 @@ public:
         tmp->next = unique_ptr<Node>{new Node(value)};
     }
 
-    // getter and setter make no error checking (if index > nodelist.length() or < 1)
     T get(int index) const {
         auto tmp = head.get();
 
         do {
             index--;
             tmp = tmp->next.get();
-        } while (index != 1);
+        } while ((index != 1) && (tmp));
+        if (!tmp) {
+            throw out_of_range("Index out of range");
+        }
         return tmp->value;
     }
 
@@ -78,7 +80,10 @@ public:
         do {
             index--;
             tmp = tmp->next.get();
-        } while (index != 1);
+        } while ((index != 1) && (tmp));
+        if (!tmp) {
+            throw out_of_range("Index out of range");
+        }
         tmp->value = value;
     }
 
@@ -177,10 +182,19 @@ int main() {
     cout << charSortedList << endl;
 
     cout << "checking getter" << endl;
-    auto x = charSortedList.get(2);
-    cout << x << endl;
+    try {
+        auto x = charSortedList.get(4);
+        cout << x << endl;
+    } catch (const out_of_range& oor) {
+        cerr << "Out of Range error: " << oor.what() << '\n';
+    }
+
     cout << "checking setter" << endl;
-    charSortedList.set(2, "L");
-    x = charSortedList.get(2);
-    cout << x << endl;
+    try {
+        charSortedList.set(2, "L");
+        auto x = charSortedList.get(2);
+        cout << x << endl;
+    } catch (const out_of_range& oor) {
+        cerr << "Out of Range error: " << oor.what() << '\n';
+    }
 }
