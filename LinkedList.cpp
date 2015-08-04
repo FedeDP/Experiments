@@ -15,10 +15,12 @@ private:
     };
 
     unique_ptr<Node> head;
+    size_t length;
 
     void copy_nodes(const LinkedList &l) {
         auto tmp = l.head.get();
 
+        length = 1;
         head = unique_ptr<Node>(new Node(tmp->value));
         while (tmp->next) {
             add_node(tmp->next->value);
@@ -29,15 +31,14 @@ private:
 public:
     LinkedList(const T value) {
         head = unique_ptr<Node>{new Node(value)};
+        length = 1;
     }
 
     LinkedList(const LinkedList<T> &l) {
-        cout << "Copy constructor." << endl;
         copy_nodes(l);
     }
 
     LinkedList& operator=(const LinkedList &l) {
-        cout << "Assigning..." << endl;
         copy_nodes(l);
         return *this;
     }
@@ -59,6 +60,7 @@ public:
             tmp = tmp->next.get();
         }
         tmp->next = unique_ptr<Node>{new Node(value)};
+        length++;
     }
 
     T get(int index) const {
@@ -136,15 +138,8 @@ public:
         }
     }
 
-    int size() const {
-        auto i = 0;
-        auto tmp = head;
-
-        while (tmp) {
-            i++;
-            tmp = tmp->next;
-        }
-        return i;
+    size_t size() const {
+        return length;
     }
 };
 
@@ -197,4 +192,8 @@ int main() {
     } catch (const out_of_range& oor) {
         cerr << "Out of Range error: " << oor.what() << '\n';
     }
+
+    cout << "checking size operator" << endl;
+    auto x = charSortedList.size();
+    cout << x << endl;
 }
