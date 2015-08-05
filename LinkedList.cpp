@@ -63,29 +63,29 @@ public:
         length++;
     }
 
-    T get(int index) const {
+    T get(size_t index) const {
         auto tmp = head.get();
 
+        if ((index < 1) || (index > length)) {
+            throw out_of_range("Index out of range");
+        }
         do {
             index--;
             tmp = tmp->next.get();
-        } while ((index != 1) && (tmp));
-        if (!tmp) {
-            throw out_of_range("Index out of range");
-        }
+        } while (index != 1);
         return tmp->value;
     }
 
-    void set(int index, T value) {
+    void set(size_t index, T value) {
         auto tmp = head.get();
 
+        if ((index < 1) || (index > length)) {
+            throw out_of_range("Index out of range");
+        }
         do {
             index--;
             tmp = tmp->next.get();
-        } while ((index != 1) && (tmp));
-        if (!tmp) {
-            throw out_of_range("Index out of range");
-        }
+        } while (index != 1);
         tmp->value = value;
     }
 
@@ -181,7 +181,7 @@ int main() {
         auto x = charSortedList.get(4);
         cout << x << endl;
     } catch (const out_of_range& oor) {
-        cerr << "Out of Range error: " << oor.what() << '\n';
+        cerr << "Out of Range error: " << oor.what() << endl;
     }
 
     cout << "checking setter" << endl;
@@ -190,7 +190,7 @@ int main() {
         auto x = charSortedList.get(2);
         cout << x << endl;
     } catch (const out_of_range& oor) {
-        cerr << "Out of Range error: " << oor.what() << '\n';
+        cerr << "Out of Range error: " << oor.what() << endl;
     }
 
     cout << "checking size operator" << endl;
